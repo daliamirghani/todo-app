@@ -5,10 +5,10 @@ const app = express();
 const port = 3000;
 app.use(express.json());
 
-const router = require("./routes/router.js");
+//const router = require("./routes/router.js");
 const authrouter = require("./routes/authrouter.js");
 
-app.use("/", router);
+//app.use("/", router);
 app.use("/", authrouter);
 
 

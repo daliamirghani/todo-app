@@ -3,8 +3,8 @@ const authrouter = Router();
 const authcontroller = require("../controllers/authcontroller.js");
 
 //// auth routes ////
-app.post("signup", authcontroller.signup(req,res));
-app.post("signin", authcontroller.signun(req,res));
-app.post("signout", authcontroller.signout(req,res));
+authrouter.post("/signup", authcontroller.signup);
+authrouter.post("/signin", authcontroller.signin);
+authrouter.post("/signout", authcontroller.signout);
 
 module.exports = authrouter;
