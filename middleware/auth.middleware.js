@@ -19,16 +19,16 @@ if (!decoded)
         msg: "Unauthorized access!"
 })
 }
-const userId=mongoose.Types.ObjectId(decoded.userId);
+
 try {
-    const userObj = await userData.findById(userId).select("-password");
+    const userObj = await userData.findById(decoded.userId).select("-password");
     if (!userObj)
  {
     return res.status(404).json({
         status: 404,
         msg: "User not found!"})
  }
- req.userId = userId; //only sends it after it ensures the user exists
+ req.userId = decoded.userId;//only sends it after it ensures the user exists
  next();
 }
 catch (error) {

@@ -1,15 +1,16 @@
 const express = require("express");
 const db = require("./db/connectDB.js")
-
+const cookieParser = require("cookie-parser");
 const app = express();
 
 const port = 3000;
 app.use(express.json());
+app.use(cookieParser());
 
-//const router = require("./routes/router.js");
+const router = require("./routes/router.js");
 const authRouter = require("./routes/auth.router.js");
 
-//app.use("/", router);
+app.use("/", router);
 app.use("/", authRouter);
 
 
