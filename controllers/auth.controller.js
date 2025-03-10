@@ -4,19 +4,21 @@ const saltRounds = 10;
 const userData= require("../modules/users.modules.js");
 
 const signup = async (req, res) => {
- try {   const input = req.body;
-    input.password = await bcrypt.hash(input.password, saltRounds)
-   await userData.create(input)
-    res.status(201).json({
+    try {
+      const input = req.body;
+      input.password = await bcrypt.hash(input.password, saltRounds);
+      await userData.create(input);
+      res.status(201).json({
         "success": true,
         "message": "User registered successfully"
-      })}
-catch (error)
-{res.status(500).json({
-    "success": false,
-    "message": "Error registering user"
-  })}
-};
+      });
+    } catch (error) {
+      res.status(500).json({
+        "success": false,
+        "message": "Error registering user"
+      });
+    }
+  };
 const signin = async (req, res) => {
     try {
       const input = req.body;
@@ -59,7 +61,6 @@ const signin = async (req, res) => {
       });
     }
   };
-
 const signout = async (req, res) => {
     res.cookie("token", "", { maxAge: 1 });
     res.status(200).json({

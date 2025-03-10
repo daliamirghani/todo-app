@@ -1,15 +1,16 @@
 const express = require("express");
 const db = require("./db/connectDB.js")
+
 const app = express();
 
 const port = 3000;
 app.use(express.json());
 
 //const router = require("./routes/router.js");
-const authrouter = require("./routes/authrouter.js");
+const authRouter = require("./routes/auth.router.js");
 
 //app.use("/", router);
-app.use("/", authrouter);
+app.use("/", authRouter);
 
 
 app.listen(3000,async()=> {console.log("listening on port 3000");

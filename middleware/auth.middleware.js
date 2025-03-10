@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const userData= require("../modules/users.modules.js");
 
@@ -38,6 +39,4 @@ catch (error) {
 }
 }
 
-module.exports={
-    doubleAuth
-}
+module.exports= doubleAuth;

@@ -1,20 +1,20 @@
 const todosData= require("../modules/todos.modules.js");
 
 
-const addtodo = (req, res) => {};
-const changestatus = (req, res) => {};
-const deletetodo = (req, res) => {};
-const getbyid = (req, res) => {};
+const addTodo = (req, res) => {};
+const changeStatus = (req, res) => {};
+const deleteTodo = (req, res) => {};
+const getById = (req, res) => {};
 
-const gettodos = (req, res) => {};
-const getremaintodos = (req, res) => {};
+const getTodos = (req, res) => {};
+const getRemainTodos = (req, res) => {};
 
 module.exports =
 {
- addtodo,
- changestatus,
- deletetodo,
- getbyid,
- gettodos,
- getremaintodos,
+ addTodo,
+ changeStatus,
+ deleteTodo,
+ getById,
+ getTodos,
+ getRemainTodos,
 }
