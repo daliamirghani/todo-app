@@ -29,26 +29,28 @@ const addTodo = async (req, res) => {
 
 
 };
-const changeStatus = (req, res) => {
-    
+const changeStatus = async (req, res) => { //sets todo to true
+ try {
+  let id = req.params.id;
+  id = new mongoose.Types.ObjectId(id);
+    {await todosData.findByIdAndUpdate(id,  { $set: {status: true} },);
+    }
+    res.status(200).json({
+      "success": true,
+      "message": "Todo status updated successfully"
+    })
+ } catch (error){
+  res.status(500).json({
+    "success": false,
+    "message": "Todo status failed to update"
+  })
+ }   
 };
 const deleteTodo = async (req, res) => {  
   try {
   let id = req.params.id;
-  console.log("hi up", id);
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    console.log("Invalid ObjectId:", id);
-    return res.status(400).json({ message: "Invalid ID format" });
-}
-id = new mongoose.Types.ObjectId(id);
-
-
-
-
-
-  console.log("hi down", id);
-  console.log(req.userId, id);
-  await userData.findByIdAndUpdate(req.userId,  { $pull: {todos: id} },)
+  id = new mongoose.Types.ObjectId(id);
+  await userData.findByIdAndUpdate(req.userId,  { $pull: {todos: id} },) 
   await todosData.findByIdAndDelete(id);
   res.status(201).json({
     "success": true,
@@ -60,8 +62,37 @@ id = new mongoose.Types.ObjectId(id);
     "message": "Error deleting todo"
   });
 }};
-const getById = (req, res) => {};
+const getById = async (req, res) => {
+try {
+  let id = req.params.id;
+  id = new mongoose.Types.ObjectId(id);
+ const currentToDo = await todosData.findById(id);
+  if (currentToDo){
+    res.status(200).json({
+      "success": true,
+      "todo": {
+        "id": currentToDo._id,
+        "title": currentToDo.title,
+        "description": currentToDo.description,
+        "status": currentToDo.status,
+        "userId": currentToDo.userId
+      }
+    })
+  }
+  else
+{ return res.status(500).json({
+    "success": false,
+    "msg": "Error getting todo"
+})}
+}
+catch (error){
+  res.status(500).json({
+    "success": false,
+    "msg": "Error getting todo"
+})
+}
 
+};
 const getTodos = (req, res) => {};
 const getRemainTodos = (req, res) => {};
 
