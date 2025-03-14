@@ -1,3 +1,4 @@
+const { TopologyDescription } = require("mongodb");
 const todosData= require("../modules/todos.modules.js");
 const userData= require("../modules/users.modules.js");
 const mongoose = require("mongoose");
@@ -66,24 +67,19 @@ const getById = async (req, res) => {
 try {
   let id = req.params.id;
   id = new mongoose.Types.ObjectId(id);
- const currentToDo = await todosData.findById(id);
-  if (currentToDo){
+ const currentTodo = await todosData.findById(id);
+  if (currentTodo){
     res.status(200).json({
       "success": true,
       "todo": {
-        "id": currentToDo._id,
-        "title": currentToDo.title,
-        "description": currentToDo.description,
-        "status": currentToDo.status,
-        "userId": currentToDo.userId
+        "id": currentTodo._id,
+        "title": currentTodo.title,
+        "description": currentTodo.description,
+        "status": currentTodo.status,
+        "userId": currentTodo.userId
       }
     })
   }
-  else
-{ return res.status(500).json({
-    "success": false,
-    "msg": "Error getting todo"
-})}
 }
 catch (error){
   res.status(500).json({
@@ -92,9 +88,54 @@ catch (error){
 })
 }
 
+}; 
+const getTodos = async (req, res) => {
+  try {
+    let todoList = await filterTodos("todos",req.userId);
+    if (todoList) {
+      res.status(200).json({
+        "success": true,
+        "todos": todoList,
+      });
+    }
+  } catch {
+    res.status(500).json({
+      "success": false,
+      "msg": "Error getting all todos"
+    });
+  }
 };
-const getTodos = (req, res) => {};
-const getRemainTodos = (req, res) => {};
+const getRemainTodos = async (req, res) => {
+ try {
+  let todoList = await filterTodos("remainingTodos",req.userId);
+  let remainingTodos= todoList.filter(todo=>todo.status === false);
+  if (todoList) {
+    res.status(200).json({
+      "success": true,
+      "remainingTodos": remainingTodos,
+    });
+  }
+} catch {
+  res.status(500).json({
+    "success": false,
+    "msg": "Error getting all remaining todos"
+  });
+}
+}
+// helper function
+async function filterTodos(name, id) {
+  let userTodos = await userData.findOne({ _id: id }); // todos of authorized user
+  let todoIds = userTodos.todos; // array of todo ids only
+  let todoList = await todosData.find({ _id: { $in: todoIds } }); // array of all todo posts corresponding to ids
+
+  return todoList.map(todo => ({
+    id: todo._id, // rename _id
+    title: todo.title,
+    description: todo.description,
+    status: todo.status,
+    userId: todo.userId
+  }));
+};
 
 module.exports =
 {
