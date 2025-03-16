@@ -7,6 +7,14 @@ const signup = async (req, res) => {
     try {
       const input = req.body;
       input.password = await bcrypt.hash(input.password, saltRounds);
+      const used = await userData.findOne({username:input.username}); //no duplicates
+      if (used)
+      {
+        return res.status(409).json({
+          "status": 409,
+          "msg": "Username already taken! Please choose another one."
+      });
+      }
       await userData.create(input);
       res.status(201).json({
         "success": true,
