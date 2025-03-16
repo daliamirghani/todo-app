@@ -1,7 +1,8 @@
-const { TopologyDescription } = require("mongodb");
+const { TopologyDescription } = require("mongodb"); //idk why this is here
 const todosData= require("../modules/todos.modules.js");
 const userData= require("../modules/users.modules.js");
 const mongoose = require("mongoose");
+const helper = require("../helper-functions/helper.js")
 const addTodo = async (req, res) => {
   
    try {
@@ -80,6 +81,11 @@ try {
       }
     })
   }
+  else
+  {  res.status(500).json({
+    "success": false,
+    "msg": "Error getting todo"
+})}
 }
 catch (error){
   res.status(500).json({
@@ -91,7 +97,7 @@ catch (error){
 }; 
 const getTodos = async (req, res) => {
   try {
-    let todoList = await filterTodos("todos",req.userId);
+    let todoList = await helper.filterTodos(req.userId);
     if (todoList) {
       res.status(200).json({
         "success": true,
@@ -107,7 +113,7 @@ const getTodos = async (req, res) => {
 };
 const getRemainTodos = async (req, res) => {
  try {
-  let todoList = await filterTodos("remainingTodos",req.userId);
+  let todoList = await helper.filterTodos(req.userId);
   let remainingTodos= todoList.filter(todo=>todo.status === false);
   if (todoList) {
     res.status(200).json({
@@ -123,19 +129,7 @@ const getRemainTodos = async (req, res) => {
 }
 }
 // helper function
-async function filterTodos(name, id) {
-  let userTodos = await userData.findOne({ _id: id }); // todos of authorized user
-  let todoIds = userTodos.todos; // array of todo ids only
-  let todoList = await todosData.find({ _id: { $in: todoIds } }); // array of all todo posts corresponding to ids
 
-  return todoList.map(todo => ({
-    id: todo._id, // rename _id
-    title: todo.title,
-    description: todo.description,
-    status: todo.status,
-    userId: todo.userId
-  }));
-};
 
 module.exports =
 {

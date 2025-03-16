@@ -14,7 +14,7 @@ app.use("/", router);
 app.use("/", authRouter);
 
 
-app.listen(3000,async()=> {console.log("listening on port 3000");
+app.listen(port,async()=> {console.log("listening on port 3000");
     try
    { await db.connectDB();
     console.log("Sucessfuly connected to the database!");
