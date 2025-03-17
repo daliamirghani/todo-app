@@ -7,11 +7,13 @@ const port = 3000;
 app.use(express.json());
 app.use(cookieParser());
 
-const router = require("./routes/router.js");
+const todorouter = require("./routes/todo.router.js");
+const userrouter = require("./routes/user.router.js");
 const authRouter = require("./routes/auth.router.js");
 
-app.use("/", router);
-app.use("/", authRouter);
+app.use("/auth/", authRouter);
+app.use("/todo/", todorouter);
+app.use("/user/", userrouter);
 
 
 app.listen(port,async()=> {console.log("listening on port 3000");
